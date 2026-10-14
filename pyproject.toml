@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gtfs-osm-directions"
+version = "0.1.0"
+description = "Turn-by-turn directions for GTFS route paths using OpenStreetMap data"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = []
+
+[project.optional-dependencies]
+pbf = ["osmium>=3.6"]
+
+[project.scripts]
+gtfs-osm-directions = "gtfs_osm_directions.cli:main"
+
+[tool.setuptools]
+packages = ["gtfs_osm_directions"]

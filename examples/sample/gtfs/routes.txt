@@ -1,0 +1,3 @@
+route_id,agency_id,route_short_name,route_long_name,route_type
+R10,A,10,West Lane - Station,3
+R20,A,20,Market - Oak South,3

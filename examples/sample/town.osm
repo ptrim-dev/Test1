@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="sample_data">
+  <node id="1001" lat="51.5000000" lon="-0.1010113"/>
+  <node id="1002" lat="51.5001349" lon="-0.1010693"/>
+  <node id="1003" lat="51.5002337" lon="-0.1012280"/>
+  <node id="1004" lat="51.5002698" lon="-0.1014447"/>
+  <node id="1005" lat="51.5002337" lon="-0.1016614"/>
+  <node id="1006" lat="51.5001349" lon="-0.1018200"/>
+  <node id="1007" lat="51.5000000" lon="-0.1018781"/>
+  <node id="1008" lat="51.4998651" lon="-0.1018200"/>
+  <node id="1009" lat="51.4997663" lon="-0.1016614"/>
+  <node id="1010" lat="51.4997302" lon="-0.1014447"/>
+  <node id="1011" lat="51.4997663" lon="-0.1012280"/>
+  <node id="1012" lat="51.4998651" lon="-0.1010693"/>
+  <node id="1013" lat="51.5000000" lon="-0.1057786"/>
+  <node id="1014" lat="51.5000000" lon="-0.1036116"/>
+  <node id="1015" lat="51.5017986" lon="-0.1014447"/>
+  <node id="1016" lat="51.5035973" lon="-0.1014447"/>
+  <node id="1017" lat="51.4982014" lon="-0.1014447"/>
+  <node id="1018" lat="51.4964027" lon="-0.1014447"/>
+  <node id="1019" lat="51.5000000" lon="-0.1000000"/>
+  <node id="1020" lat="51.5000000" lon="-0.0971107"/>
+  <node id="1021" lat="51.5000000" lon="-0.0942214"/>
+  <node id="1022" lat="51.5000000" lon="-0.0913321"/>
+  <node id="1023" lat="51.5000000" lon="-0.0884427"/>
+  <node id="1024" lat="51.4964027" lon="-0.0942214"/>
+  <node id="1025" lat="51.4982014" lon="-0.0942214"/>
+  <node id="1026" lat="51.5017986" lon="-0.0942214"/>
+  <node id="1027" lat="51.5035973" lon="-0.0942214"/>
+  <node id="1028" lat="51.5035973" lon="-0.0978330"/>
+  <node id="1029" lat="51.5035973" lon="-0.0913321"/>
+  <node id="1030" lat="51.5035973" lon="-0.0884427"/>
+  <node id="1031" lat="51.5017986" lon="-0.0884427"/>
+  <node id="1032" lat="51.5001079" lon="-0.1000000"/>
+  <node id="1033" lat="51.5001079" lon="-0.0942214"/>
+  <way id="1">
+    <nd ref="1001"/>
+    <nd ref="1002"/>
+    <nd ref="1003"/>
+    <nd ref="1004"/>
+    <nd ref="1005"/>
+    <nd ref="1006"/>
+    <nd ref="1007"/>
+    <nd ref="1008"/>
+    <nd ref="1009"/>
+    <nd ref="1010"/>
+    <nd ref="1011"/>
+    <nd ref="1012"/>
+    <nd ref="1001"/>
+    <tag k="highway" v="primary"/>
+    <tag k="junction" v="roundabout"/>
+  </way>
+  <way id="2">
+    <nd ref="1013"/>
+    <nd ref="1014"/>
+    <nd ref="1007"/>
+    <tag k="highway" v="secondary"/>
+    <tag k="name" v="West Lane"/>
+  </way>
+  <way id="3">
+    <nd ref="1004"/>
+    <nd ref="1015"/>
+    <nd ref="1016"/>
+    <tag k="highway" v="residential"/>
+    <tag k="name" v="North Road"/>
+  </way>
+  <way id="4">
+    <nd ref="1010"/>
+    <nd ref="1017"/>
+    <nd ref="1018"/>
+    <tag k="highway" v="residential"/>
+    <tag k="name" v="South Road"/>
+  </way>
+  <way id="5">
+    <nd ref="1001"/>
+    <nd ref="1019"/>
+    <nd ref="1020"/>
+    <nd ref="1021"/>
+    <tag k="highway" v="primary"/>
+    <tag k="name" v="Main Street"/>
+  </way>
+  <way id="6">
+    <nd ref="1021"/>
+    <nd ref="1022"/>
+    <nd ref="1023"/>
+    <tag k="highway" v="primary"/>
+    <tag k="name" v="Main Street"/>
+  </way>
+  <way id="7">
+    <nd ref="1024"/>
+    <nd ref="1025"/>
+    <nd ref="1021"/>
+    <nd ref="1026"/>
+    <nd ref="1027"/>
+    <tag k="highway" v="secondary"/>
+    <tag k="name" v="Oak Avenue"/>
+  </way>
+  <way id="8">
+    <nd ref="1016"/>
+    <nd ref="1028"/>
+    <nd ref="1027"/>
+    <tag k="highway" v="residential"/>
+    <tag k="name" v="Elm Road"/>
+  </way>
+  <way id="9">
+    <nd ref="1027"/>
+    <nd ref="1029"/>
+    <nd ref="1030"/>
+    <tag k="highway" v="residential"/>
+    <tag k="name" v="Elm Road"/>
+    <tag k="oneway" v="yes"/>
+  </way>
+  <way id="10">
+    <nd ref="1030"/>
+    <nd ref="1031"/>
+    <nd ref="1023"/>
+    <tag k="highway" v="tertiary"/>
+    <tag k="name" v="Station Road"/>
+  </way>
+  <way id="11">
+    <nd ref="1032"/>
+    <nd ref="1033"/>
+    <tag k="highway" v="footway"/>
+    <tag k="name" v="Riverside Walk"/>
+  </way>
+</osm>

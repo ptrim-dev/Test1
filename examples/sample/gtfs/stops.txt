@@ -1,0 +1,8 @@
+stop_id,stop_name,stop_lat,stop_lon
+S1,West Lane West,51.5000000,-0.1054897
+S2,Market Square,51.5000000,-0.0978330
+S3,Oak Avenue Mid,51.5019785,-0.0942214
+S4,Elm Road East,51.5035973,-0.0906097
+S5,Station,51.5004497,-0.0884427
+S6,Main Street East,51.5000000,-0.0898874
+S7,Oak Avenue South,51.4968524,-0.0942214

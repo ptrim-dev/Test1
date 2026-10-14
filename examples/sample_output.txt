@@ -1,0 +1,27 @@
+========================================================================
+Route 10 – West Lane - Station towards Station (direction 0)
+  2 trip(s) · shape SH10 · 2.0 km · 100% matched to OSM
+------------------------------------------------------------------------
+  1. Head east on West Lane  (280 m)
+       • stop: West Lane West [S1]
+  2. At the roundabout, take the 2nd exit onto Main Street  (560 m)
+       • stop: Market Square [S2]
+  3. Turn left onto Oak Avenue  (400 m)
+       • stop: Oak Avenue Mid [S3]
+  4. Turn right onto Elm Road  (400 m)
+       • stop: Elm Road East [S4]
+  5. Turn right onto Station Road  (390 m)
+       • stop: Station [S5]
+  6. Arrive at Station
+
+========================================================================
+Route 20 – Market - Oak South towards Oak Avenue South (direction 0)
+  1 trip(s) · no shape (routed between stops) · 1.2 km · 100% matched to OSM
+------------------------------------------------------------------------
+  1. Head east on Main Street  (550 m)
+       • stop: Market Square [S2]
+       • stop: Main Street East [S6]
+  2. Make a U-turn to stay on Main Street  (300 m)
+  3. Turn left onto Oak Avenue  (350 m)
+       • stop: Oak Avenue South [S7]
+  4. Arrive at Oak Avenue South
