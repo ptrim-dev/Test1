@@ -2,6 +2,7 @@ __pycache__/
 *.egg-info/
 build/
 dist/
-overpass_cache.osm
-*.html
-!examples/**/*.html
+.venv/
+*.onnx
+*.mp4
+!tests/**/*.mp4

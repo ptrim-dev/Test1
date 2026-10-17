@@ -1,134 +1,85 @@
-# gtfs-osm-directions
+# FaceSwap Studio
 
-Generate turn-by-turn driving directions for every path in a GTFS feed
-("Head east on West Lane → At the roundabout, take the 2nd exit onto Main
-Street → Turn left onto Oak Avenue …") by map-matching the route shapes onto
-OpenStreetMap ways.
+A local web app for putting yourself and your friends into movie scenes. Upload a clip, let it
+find the actors, give it a few photos of who should play each role, preview a frame, and render.
 
-Pure Python 3.9+, no required dependencies.
-
-## Quick start
-
-```bash
-# Try it on the bundled synthetic town
-python -m gtfs_osm_directions examples/sample/gtfs --osm examples/sample/town.osm
-
-# Real data: a GTFS zip plus an OSM extract (e.g. from Geofabrik / BBBike)
-python -m gtfs_osm_directions feed.zip --osm city.osm -r 10 -f html -o route10.html
-
-# Or let the tool download just the ways it needs from Overpass
-python -m gtfs_osm_directions feed.zip --overpass -r 10
-```
-
-Or install the `gtfs-osm-directions` command with `pip install .` (add
-`.[pbf]` to read `.osm.pbf` files through pyosmium).
-
-Sample output (`examples/sample_output.txt`):
-
-```
-Route 10 – West Lane - Station towards Station (direction 0)
-  2 trip(s) · shape SH10 · 2.0 km · 100% matched to OSM
-------------------------------------------------------------------------
-  1. Head east on West Lane  (280 m)
-       • stop: West Lane West [S1]
-  2. At the roundabout, take the 2nd exit onto Main Street  (550 m)
-       • stop: Market Square [S2]
-  3. Turn left onto Oak Avenue  (400 m)
-       • stop: Oak Avenue Mid [S3]
-  4. Turn right onto Elm Road  (400 m)
-       • stop: Elm Road East [S4]
-  5. Turn right onto Station Road  (390 m)
-       • stop: Station [S5]
-  6. Arrive at Station
-```
-
-## Options
-
-| Option | Meaning |
-| --- | --- |
-| `--osm FILE` | `.osm`, `.osm.gz`, `.osm.bz2`, or `.osm.pbf` (needs `pip install osmium`) |
-| `--overpass` | Download ways for the selected routes' bounding box (cached in `--overpass-cache`) |
-| `-r/--route` | `route_id` or `route_short_name`; repeat for several (default: all routes) |
-| `--direction 0\|1` | Only one `direction_id` |
-| `-f/--format` | `text` (default), `json`, `geojson`, or `html` (Leaflet map with a step list) |
-| `-o/--output` | Write to a file instead of stdout |
-| `--step` | Shape resample spacing in metres (default 10) |
-| `--radius` | Max distance between shape and OSM way in metres (default 35) |
-| `--straight-threshold` | Turns smaller than this many degrees are "continue" (default 20) |
+Everything runs on your own machine: no uploads, credits, or watermarks.
 
 ## How it works
 
-1. **GTFS → patterns** (`gtfs.py`). Trips are grouped by route, direction and
-   `shape_id`, so each distinct path is processed once. The most common stop
-   sequence in each group gives the stops and destination.
-2. **OSM → network** (`osm.py`, `network.py`). Ways usable by the route's
-   mode are kept: roads for buses (honouring `access`, `bus`/`psv`, `oneway`,
-   `oneway:bus`, and implied one-way roundabouts/motorways), `railway=tram|light_rail`
-   for trams, and heavy-rail/subway tracks for trains. Segments go into a grid
-   spatial index in a local metric projection.
-3. **Map matching** (`matcher.py`). The shape is resampled every 10 m, and a
-   Viterbi (HMM) pass picks one OSM way per sample. The cost combines
-   distance, heading agreement and one-way rules. Switching to a connected way
-   costs little and jumping to an unconnected way costs a lot, so the match
-   doesn't flicker between parallel streets or cross streets.
-4. **Directions** (`directions.py`). Consecutive samples on ways with the same
-   name/ref become a leg. At each leg change the turn angle is measured 30 m
-   either side of the junction:
-
-   | Angle | Instruction |
-   | --- | --- |
-   | ≤ 20° | Continue straight |
-   | ≤ 45° | Bear left/right |
-   | ≤ 135° | Turn left/right |
-   | ≤ 170° | Sharp left/right |
-   | > 170° | U-turn |
-
-   Also handled:
-   - Roundabouts: the exit number is counted by walking the ring.
-   - Slip roads: `*_link` ways give ramp and merge instructions.
-   - Reversals on the same street come out as U-turns.
-   - Each stop is attached to the step on which it is served.
-5. **No `shapes.txt`?** The path is built by routing between consecutive stops
-   on the OSM network (A*, respecting one-way streets), then matched as above.
-
-## Output formats
-
-- `json`: one object per pattern with metadata, `matched_ratio`, warnings and
-  instructions (action, modifier, street, text, location, distance, turn angle,
-  roundabout exit, stops).
-- `geojson`: a LineString per pattern (snapped geometry) plus a Point per
-  instruction. Load it in QGIS or geojson.io.
-- `html`: a self-contained Leaflet page with a route picker and clickable steps.
-
-## Library use
-
-```python
-from gtfs_osm_directions import GTFSFeed, load_osm, DirectionsEngine, feed_projection
-
-feed = GTFSFeed("feed.zip")
-patterns = feed.patterns(["10"])
-engine = DirectionsEngine(feed, load_osm("city.osm"), feed_projection(feed, patterns))
-for p in patterns:
-    result = engine.run(p)
-    for step in result.instructions:
-        print(step.text, round(step.distance))
+```
+scene.mp4 ─► sample frames ─► detect faces (SCRFD) ─► group by identity (ArcFace) ─► "Actor 1..N"
+                                                                                        │
+friend photos ─► ArcFace identity (averaged over all photos) ─────────────────────────┐ │
+                                                                                      ▼ ▼
+every frame ─► detect faces ─► match each one to the nearest actor ─► inswapper_128 swap ─► GFPGAN restore ─► ffmpeg (+ original audio)
 ```
 
-## Limitations
+| Stage | Model | File |
+|---|---|---|
+| Face detection and landmarks | InsightFace `buffalo_l` / SCRFD | auto-downloaded by `insightface` |
+| Identity embeddings | InsightFace `buffalo_l` / ArcFace w600k_r50 | auto-downloaded by `insightface` |
+| Face swap | `inswapper_128_fp16.onnx` | `faceswap_studio/engine.py` › `Swapper` |
+| Face restoration | `gfpgan_1.4.onnx` | `faceswap_studio/engine.py` › `Restorer` |
 
-- The OSM extract must cover the whole route. A low `matched_ratio` produces a
-  warning.
-- Ferries and aerial lifts have no street network and are skipped.
-- Tram and rail tracks are often unnamed in OSM, so those directions say
-  "unnamed tram" and similar.
-- The local equirectangular projection is accurate for city and regional feeds;
-  very large (continental) feeds should be split by route.
+Models download on first run (about 900 MB in total) to `~/.faceswap_studio/models` (override with
+`FACESWAP_MODELS`) and `~/.insightface/models`.
 
-## Tests
+## Setup (Windows/Linux with an NVIDIA GPU)
+
+Requirements: Python 3.10+, [ffmpeg](https://ffmpeg.org/download.html) on your `PATH`, and an
+NVIDIA driver with CUDA 12 + cuDNN 9 (what current `onnxruntime-gpu` wheels expect).
 
 ```bash
-python -m unittest discover -s tests
+python -m venv .venv
+# Windows: .venv\Scripts\activate    Linux/macOS: source .venv/bin/activate
+pip install -e ".[gpu]"      # or ".[cpu]" on a machine without an NVIDIA GPU
+faceswap-studio              # then open http://127.0.0.1:7860
 ```
 
-`tests/sample_data.py` generates the synthetic town used by the tests and
-in `examples/sample`.
+If `insightface` fails to build on Windows, install the "Desktop development with C++" workload
+from the Visual Studio Build Tools and retry.
+
+To confirm the GPU is in use, run
+`python -c "import onnxruntime; print(onnxruntime.get_available_providers())"`. The output should
+include `CUDAExecutionProvider`.
+
+## Using it
+
+1. **Movie scene**: upload a clip and trim it with the Start/End sliders (short clips render fastest).
+2. **Find the actors**: samples the clip and shows one card per distinct face.
+3. **Cast your friends**: under each actor, upload 1–5 photos of the person who should replace
+   them. Clear, front-facing, well-lit photos work best, and several photos give a steadier likeness.
+   Leave a card empty to keep that actor's face.
+4. **Preview frame**, then **Render video**. The output keeps the original audio.
+
+Settings:
+- **Match threshold**: lower it if the swap flickers off on side profiles. Raise it if the wrong
+  person is being swapped.
+- **Face restoration**: GFPGAN sharpening. Turn it down if faces look plasticky, or set it to 0
+  for faster drafts.
+
+## Project layout
+
+```
+faceswap_studio/
+  app.py     Gradio UI and event handlers
+  engine.py  detection, identity, swapper, restorer, blending
+  cast.py    scanning a scene and clustering faces into actors
+  video.py   frame reading and ffmpeg encoding with audio
+  models.py  model download and GPU provider selection
+tests/       model-free tests for blending and video I/O (pytest)
+```
+
+## Ideas for next steps
+
+- Temporal smoothing of landmarks to reduce jitter between frames
+- Face-parsing occlusion masks so hands and hair in front of the face stay intact
+- A higher-resolution swapper or CodeFormer as a restoration option
+- Lip and expression transfer (e.g. LivePortrait) for "talking" shots
+
+## Responsible use and licensing
+
+Only swap in faces of people who have agreed to it, and don't present results as real footage.
+The `inswapper_128` and InsightFace models are released for **non-commercial research use
+only**. Movie clips remain the property of their copyright holders, so keep this to personal fun.

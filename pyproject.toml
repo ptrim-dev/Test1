@@ -3,18 +3,26 @@ requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "gtfs-osm-directions"
+name = "faceswap-studio"
 version = "0.1.0"
-description = "Turn-by-turn directions for GTFS route paths using OpenStreetMap data"
+description = "Swap your own and your friends' faces into movie scenes"
 readme = "README.md"
-requires-python = ">=3.9"
-dependencies = []
+requires-python = ">=3.10"
+dependencies = [
+    "gradio>=4.44",
+    "insightface>=0.7.3",
+    "numpy",
+    "onnx",
+    "opencv-python",
+]
 
 [project.optional-dependencies]
-pbf = ["osmium>=3.6"]
+gpu = ["onnxruntime-gpu"]
+cpu = ["onnxruntime"]
+dev = ["pytest"]
 
 [project.scripts]
-gtfs-osm-directions = "gtfs_osm_directions.cli:main"
+faceswap-studio = "faceswap_studio.app:main"
 
 [tool.setuptools]
-packages = ["gtfs_osm_directions"]
+packages = ["faceswap_studio"]
